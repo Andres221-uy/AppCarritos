@@ -1,8 +1,8 @@
 // ════════════════════════════════════════════════════════════
 //  CONFIG — reemplazá con tus keys de Supabase
 // ════════════════════════════════════════════════════════════
-var SUPABASE_URL = 'https://TU_PROYECTO.supabase.co';
-var SUPABASE_ANON_KEY = 'TU_ANON_KEY';
+var SUPABASE_URL = 'https://lychywgmquifrafmjyhy.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5Y2h5d2dtcXVpZnJhZm1qeWh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2NTUwMDYsImV4cCI6MjA5NTIzMTAwNn0.cFuzYYKNUk2GuWLvjMfkE4voAh37unhfo9kNgnwuuV0';
 
 var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
