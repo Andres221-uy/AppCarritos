@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>CarritosUY</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo">🛒 CarritosUY</div>
+
+    <div class="header-right">
+      <div id="authArea">
+        <button class="auth-btn auth-btn-login" id="btnOpenAuth">
+          Entrar
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTROLES -->
+  <div class="top-controls">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+
+      <input
+        type="search"
+        id="searchInput"
+        placeholder="Buscar carritos o barrio…"
+      />
+    </div>
+
+    <div class="filters" id="filterBar"></div>
+  </div>
+
+  <!-- MAPA -->
+  <div class="map-wrap">
+    <div id="map"></div>
+    <button class="geo-btn" id="geoBtn">📍</button>
+  </div>
+
+  <!-- LISTA -->
+  <div class="list-section">
+    <div class="list-title" id="listTitle">
+      Carritos en Uruguay
+    </div>
+
+    <div id="carritoList"></div>
+  </div>
+
+  <!-- PANEL DETALLE -->
+  <div id="detailPanel"></div>
+
+  <!-- AUTH -->
+  <div id="authScreen"></div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
+<script type="module" src="js/main.js"></script>
+
+</body>
+</html>
