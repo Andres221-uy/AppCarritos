@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>CarritosUY</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body>
+<div class="app">
+
+  <!-- ══ HEADER ══ -->
+  <header class="header">
+    <div class="logo">🛒 CarritosUY</div>
+    <div class="header-right">
+      <div id="authArea">
+        <button class="auth-btn auth-btn-login" id="btnOpenAuth">Entrar</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══ BÚSQUEDA Y FILTROS ══ -->
+  <div class="top-controls">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="search" id="searchInput" placeholder="Buscar carritos o barrio…" autocomplete="off"/>
+    </div>
+    <div class="filters" id="filterBar">
+      <button class="filter-btn active" data-filter="Todos">Todos</button>
+      <button class="filter-btn" data-filter="Chivitos">🥩 Chivitos</button>
+      <button class="filter-btn" data-filter="Tortas">🥞 Tortas fritas</button>
+      <button class="filter-btn" data-filter="Panchos">🌭 Panchos</button>
+      <button class="filter-btn" data-filter="Pizzas">🍕 Pizzas</button>
+      <button class="filter-btn" data-filter="Empanadas">🥙 Empanadas</button>
+    </div>
+  </div>
+
+  <!-- ══ MAPA ══ -->
+  <div class="map-wrap">
+    <div id="map"></div>
+    <button class="geo-btn" id="geoBtn">📍</button>
+  </div>
+
+  <!-- ══ LISTA ══ -->
+  <div class="list-section">
+    <div class="list-title" id="listTitle">Carritos en Uruguay</div>
+    <div id="carritoList"></div>
+  </div>
+
+  <!-- ══ PANEL DE DETALLE ══ -->
+  <div class="side-panel" id="detailPanel">
+    <div class="panel-header">
+      <button class="back-btn" id="backBtn">←</button>
+      <div class="panel-header-info">
+        <div class="panel-header-name" id="dHeaderName"></div>
+        <div class="panel-header-sub"  id="dHeaderSub"></div>
+      </div>
+    </div>
+    <div class="panel-body" id="detailBody">
+      <div class="detail-banner" id="dBanner"></div>
+      <div class="detail-section">
+        <div class="detail-name"   id="dName"></div>
+        <div class="detail-loc"    id="dLoc"></div>
+        <div class="detail-badges" id="dBadges"></div>
+      </div>
+      <div class="action-row">
+        <button class="action-btn action-btn-nav"   id="btnNavWalk">🚶 Cómo llegar</button>
+        <button class="action-btn action-btn-gmaps" id="btnGMaps">🗺️ Google Maps</button>
+        <button class="action-btn action-btn-waze"  id="btnWaze">📡 Waze</button>
+      </div>
+      <div class="tabs" id="detailTabs">
+        <div class="tab active" data-tab="info">Información</div>
+        <div class="tab" data-tab="menu">Menú</div>
+        <div class="tab" data-tab="resenas">Reseñas</div>
+      </div>
+      <div class="tab-body">
+        <div class="tab-pane active" id="pane-info"></div>
+        <div class="tab-pane"        id="pane-menu"></div>
+        <div class="tab-pane"        id="pane-resenas"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MENÚ DE USUARIO ══ -->
+  <div class="user-menu side-panel" id="userMenu">
+    <div class="panel-header">
+      <button class="back-btn" id="backUserMenu">←</button>
+      <div class="panel-header-info">
+        <div class="panel-header-name">Mi cuenta</div>
+      </div>
+    </div>
+    <div class="user-menu-header" id="userMenuHeader"></div>
+    <div id="userMenuBody"></div>
+  </div>
+
+  <!-- ══ DASHBOARD DUEÑO ══ -->
+  <div class="side-panel" id="dashboardPanel">
+    <div class="panel-header">
+      <button class="back-btn" id="backDashboard">←</button>
+      <div class="panel-header-info">
+        <div class="panel-header-name">Mi carrito</div>
+        <div class="panel-header-sub">Panel de gestión</div>
+      </div>
+    </div>
+    <div class="panel-body" id="dashboardBody"></div>
+  </div>
+
+  <!-- ══ AUTH SCREEN ══ -->
+  <div class="auth-screen" id="authScreen">
+    <div class="auth-handle-bar"></div>
+    <button class="auth-close" id="authClose">✕</button>
+    <div class="auth-inner" id="authInner"></div>
+  </div>
+
+  <!-- ══ NAV PANEL ══ -->
+  <div class="nav-panel" id="navPanel">
+    <div class="nav-panel-handle"></div>
+    <div class="nav-panel-head">
+      <div class="nav-panel-title">🧭 Cómo llegar</div>
+      <button class="nav-panel-close" id="navPanelClose">✕</button>
+    </div>
+    <div class="nav-panel-dest" id="navPanelDest"></div>
+    <div class="nav-stats">
+      <div class="nav-stat"><div class="nav-stat-val" id="navDist">—</div><div class="nav-stat-label">Distancia</div></div>
+      <div class="nav-stat"><div class="nav-stat-val" id="navTime">—</div><div class="nav-stat-label">Caminando</div></div>
+      <div class="nav-stat"><div class="nav-stat-val" id="navTimeCar">—</div><div class="nav-stat-label">En auto</div></div>
+    </div>
+    <div class="nav-apps">
+      <button class="nav-app-btn gmaps" id="navBtnGMaps">🗺️ Google Maps</button>
+      <button class="nav-app-btn waze"  id="navBtnWaze">📡 Waze</button>
+      <button class="nav-app-btn osm"   id="navBtnOSM">🌐 OpenStreet</button>
+    </div>
+  </div>
+
+  <!-- ══ LOADER ══ -->
+  <div class="loader-overlay" id="loaderOverlay"><div class="spinner"></div></div>
+
+  <!-- ══ PANEL FAVORITOS ══ -->
+  <div class="full-panel" id="favPanel">
+    <div class="panel-header">
+      <button class="back-btn" id="backFav">&#8592;</button>
+      <div class="panel-header-info">
+        <div class="panel-header-name">&#10084;&#65039; Mis favoritos</div>
+        <div class="panel-header-sub">Carritos guardados</div>
+      </div>
+    </div>
+    <div class="panel-body" id="favBody" style="padding:12px 16px;"></div>
+  </div>
+
+  <!-- ══ PANEL ALERTAS ══ -->
+  <div class="full-panel" id="alertPanel">
+    <div class="panel-header">
+      <button class="back-btn" id="backAlert">&#8592;</button>
+      <div class="panel-header-info">
+        <div class="panel-header-name">&#128276; Mis alertas</div>
+        <div class="panel-header-sub">Avisame cuando abran</div>
+      </div>
+    </div>
+    <div class="panel-body" id="alertBody" style="padding:12px 16px;"></div>
+  </div>
+
+  <!-- ══ PANEL HISTORIAL ══ -->
+  <div class="full-panel" id="histPanel">
+    <div class="panel-header">
+      <button class="back-btn" id="backHist">&#8592;</button>
+      <div class="panel-header-info">
+        <div class="panel-header-name">&#127963; Mis visitas</div>
+        <div class="panel-header-sub">Historial de carritos</div>
+      </div>
+    </div>
+    <div class="panel-body" id="histBody" style="padding:12px 16px;"></div>
+  </div>
+
+  <!-- ══ PANEL FOTOS ══ -->
+  <div class="full-panel" id="fotosPanel">
+    <div class="panel-header">
+      <button class="back-btn" id="backFotos">&#8592;</button>
+      <div class="panel-header-info">
+        <div class="panel-header-name" id="fotosPanelTitle">&#128248; Fotos</div>
+        <div class="panel-header-sub">Fotos reales del carrito</div>
+      </div>
+    </div>
+    <div class="panel-body" id="fotosBody"></div>
+    <input type="file" accept="image/*" class="photo-uploader" id="photoUploader"/>
+  </div>
+
+  <!-- ══ PANEL NOVEDADES ══ -->
+  <div class="full-panel" id="novedadesPanel">
+    <div class="panel-header">
+      <button class="back-btn" id="backNovedades">&#8592;</button>
+      <div class="panel-header-info">
+        <div class="panel-header-name">&#128226; Novedades</div>
+        <div class="panel-header-sub">Lo último de tus favoritos</div>
+      </div>
+    </div>
+    <div class="panel-body" id="novedadesBody" style="padding:12px 16px;"></div>
+  </div>
+
+  <!-- ══ PANEL PLANES ══ -->
+  <div class="planes-panel" id="planesPanel">
+    <div class="planes-hero">
+      <div style="font-size:36px;margin-bottom:8px;">🛒✨</div>
+      <div class="planes-hero-title">Elegí tu plan</div>
+      <div class="planes-hero-sub">Hacé crecer tu carrito con más visibilidad,<br>estadísticas y herramientas profesionales</div>
+    </div>
+    <div style="flex-shrink:0;padding:10px 16px 0;display:flex;justify-content:flex-end;">
+      <button style="border:none;background:none;font-size:22px;color:#888;cursor:pointer;" id="planesClose">✕</button>
+    </div>
+    <div class="planes-scroll" id="planesScroll"></div>
+  </div>
+
+  <!-- ══ PANEL PAGO ══ -->
+  <div class="pago-panel" id="pagoPanel">
+    <div class="pago-handle"></div>
+    <button class="pago-close" id="pagoClose">✕</button>
+    <div class="pago-inner" id="pagoInner"></div>
+  </div>
+
+</div><!-- .app -->
+
+<!-- ══ LIBRERÍAS EXTERNAS ══ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
+<!-- ══ MÓDULOS DE LA APP (orden importa) ══ -->
+<script src="js/config.js"></script>    <!-- Supabase keys + datos CARRITOS/PLANES -->
+<script src="js/state.js"></script>     <!-- Estado global + utilidades + localStorage -->
+<script src="js/lista.js"></script>     <!-- Renderizado de cards + filtros + búsqueda -->
+<script src="js/mapa.js"></script>      <!-- Mapa Leaflet + marcadores + navegación -->
+<script src="js/detalle.js"></script>   <!-- Panel detalle + reseñas + fotos inline -->
+<script src="js/auth.js"></script>      <!-- Login / registro / OTP / sesión -->
+<script src="js/paneles.js"></script>   <!-- Menú usuario + favoritos + alertas + historial + fotos + novedades -->
+<script src="js/dashboard.js"></script> <!-- Dashboard dueño + edición + stats + menú + reseñas -->
+<script src="js/planes.js"></script>    <!-- Planes de suscripción + flujo de pago -->
+
+<!-- ══ ARRANQUE ══ -->
+<script>
+  renderCards(CARRITOS);
+</script>
+
+</body>
+</html>
