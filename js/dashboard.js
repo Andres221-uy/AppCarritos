@@ -106,6 +106,7 @@ function openDashboard() {
   });
 
   // Agregar sección de tabs del dueño
+  
   var tabSection = document.createElement('div');
   tabSection.style.cssText = 'border-top:2px solid #e8f5ee;margin-top:8px;';
   tabSection.innerHTML =

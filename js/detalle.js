@@ -1,17 +1,17 @@
 // ════════════════════════════════════════════════════════════
 //  PANEL DE DETALLE
 // ════════════════════════════════════════════════════════════
-window.openDetail = function(id) {
-  var c = CARRITOS.find(function(x) { return x.id === id; });
+window.openDetail = function (id) {
+  var c = CARRITOS.find(function (x) { return x.id === id; });
   if (!c) return;
   currentCarrito = c;
   registerVisit(c);
 
   document.getElementById('dHeaderName').textContent = c.nombre;
-  document.getElementById('dHeaderSub').textContent  = c.barrio;
-  document.getElementById('dBanner').textContent     = c.emoji;
-  document.getElementById('dName').textContent       = c.nombre;
-  document.getElementById('dLoc').innerHTML          = '📍 ' + c.barrio;
+  document.getElementById('dHeaderSub').textContent = c.barrio;
+  document.getElementById('dBanner').textContent = c.emoji;
+  document.getElementById('dName').textContent = c.nombre;
+  document.getElementById('dLoc').innerHTML = '📍 ' + c.barrio;
   document.getElementById('dBadges').innerHTML =
     '<span class="badge ' + (c.estado === 'abierto' ? 'b-open' : 'b-closed') + '">'
     + (c.estado === 'abierto' ? '● Abierto ahora' : '● Cerrado') + '</span>'
@@ -25,7 +25,7 @@ window.openDetail = function(id) {
     + '<div class="info-row"><span class="info-label">🍽️ Especialidad</span><span class="info-val">' + c.especialidad + '</span></div>'
     + '<div class="info-row"><span class="info-label">📍 Estado</span><span class="info-val ' + (c.estado === 'abierto' ? 'val-open' : 'val-closed') + '">' + (c.estado === 'abierto' ? 'Abierto' : 'Cerrado') + '</span></div>';
 
-  document.getElementById('pane-menu').innerHTML = c.menu.map(function(m) {
+  document.getElementById('pane-menu').innerHTML = c.menu.map(function (m) {
     return '<div class="menu-item"><div class="menu-name">' + m.nombre + '</div>'
       + '<div class="menu-desc">' + m.desc + '</div>'
       + '<div class="menu-price">' + m.precio + '</div></div>';
@@ -35,17 +35,17 @@ window.openDetail = function(id) {
   renderFotosEnDetalle(c);
 
   // Reset tabs
-  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
-  document.querySelectorAll('.tab-pane').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function (t) { t.classList.remove('active'); });
+  document.querySelectorAll('.tab-pane').forEach(function (p) { p.classList.remove('active'); });
   document.querySelector('.tab[data-tab="info"]').classList.add('active');
   document.getElementById('pane-info').classList.add('active');
 
-  document.getElementById('btnNavWalk').onclick = function() {
+  document.getElementById('btnNavWalk').onclick = function () {
     document.getElementById('detailPanel').classList.remove('open');
     showNavPanel(c.lat, c.lng, c.nombre);
   };
-  document.getElementById('btnGMaps').onclick = function() { navGoogleMaps(c.lat, c.lng); };
-  document.getElementById('btnWaze').onclick   = function() { navWaze(c.lat, c.lng); };
+  document.getElementById('btnGMaps').onclick = function () { navGoogleMaps(c.lat, c.lng); };
+  document.getElementById('btnWaze').onclick = function () { navWaze(c.lat, c.lng); };
 
   document.getElementById('detailPanel').classList.add('open');
 };
@@ -58,15 +58,15 @@ function renderReviews(c) {
 
   var writeBtn = currentUser
     ? '<div style="margin-top:14px;">'
-      + '<div class="edit-section-title">Tu reseña</div>'
-      + '<div class="star-selector" id="starSelector">'
-      + '<span class="star-opt" data-v="1">★</span><span class="star-opt" data-v="2">★</span>'
-      + '<span class="star-opt" data-v="3">★</span><span class="star-opt" data-v="4">★</span>'
-      + '<span class="star-opt" data-v="5">★</span>'
-      + '</div>'
-      + '<div class="field"><textarea id="reviewText" placeholder="Contá tu experiencia…"></textarea></div>'
-      + '<button class="edit-save-btn" id="submitReviewBtn">Publicar reseña</button>'
-      + '</div>'
+    + '<div class="edit-section-title">Tu reseña</div>'
+    + '<div class="star-selector" id="starSelector">'
+    + '<span class="star-opt" data-v="1">★</span><span class="star-opt" data-v="2">★</span>'
+    + '<span class="star-opt" data-v="3">★</span><span class="star-opt" data-v="4">★</span>'
+    + '<span class="star-opt" data-v="5">★</span>'
+    + '</div>'
+    + '<div class="field"><textarea id="reviewText" placeholder="Contá tu experiencia…"></textarea></div>'
+    + '<button class="edit-save-btn" id="submitReviewBtn">Publicar reseña</button>'
+    + '</div>'
     : '<button class="write-review-btn" onclick="openAuthScreen()">✏️ Iniciá sesión para dejar una reseña</button>';
 
   document.getElementById('pane-resenas').innerHTML =
@@ -74,7 +74,7 @@ function renderReviews(c) {
     + '<div style="font-size:30px;font-weight:700;color:#111;">' + rating + '</div>'
     + '<div><div style="color:#e67e22;font-size:18px;">' + starsHtml + '</div>'
     + '<div style="font-size:12px;color:#aaa;">' + c.reviews + ' reseñas</div></div></div>'
-    + c.resenas.map(function(r) {
+    + c.resenas.map(function (r) {
       var rs = ''; for (var i = 0; i < r.stars; i++) rs += '★';
       return '<div class="review"><div class="review-top"><span class="reviewer">' + r.user + '</span><span class="review-date">' + r.fecha + '</span></div>'
         + '<div class="review-stars">' + rs + '</div>'
@@ -84,15 +84,15 @@ function renderReviews(c) {
 
   if (currentUser) {
     var selectedStars = 0;
-    document.getElementById('pane-resenas').addEventListener('click', function(e) {
+    document.getElementById('pane-resenas').addEventListener('click', function (e) {
       var star = e.target.closest('.star-opt');
       if (!star) return;
       selectedStars = parseInt(star.dataset.v, 10);
-      document.querySelectorAll('.star-opt').forEach(function(s) {
+      document.querySelectorAll('.star-opt').forEach(function (s) {
         s.classList.toggle('filled', parseInt(s.dataset.v, 10) <= selectedStars);
       });
     });
-    document.getElementById('submitReviewBtn').addEventListener('click', function() {
+    document.getElementById('submitReviewBtn').addEventListener('click', function () {
       var txt = document.getElementById('reviewText').value.trim();
       if (!selectedStars) { alert('Elegí una calificación (★)'); return; }
       if (!txt) { alert('Escribí algo en tu reseña'); return; }
@@ -117,7 +117,7 @@ function renderFotosEnDetalle(c) {
     fotoPane.style.padding = '0';
     document.querySelector('.tab-body').appendChild(fotoPane);
   }
-  var arr  = fotos[c.id] || [];
+  var arr = fotos[c.id] || [];
   var pane = document.getElementById('pane-fotos');
   if (arr.length === 0) {
     pane.innerHTML = '<div style="text-align:center;padding:24px 16px;color:#bbb;">'
@@ -127,23 +127,23 @@ function renderFotosEnDetalle(c) {
       + '</div>';
   } else {
     pane.innerHTML = '<div class="photos-grid">'
-      + arr.slice(0, 4).map(function(f) {
+      + arr.slice(0, 4).map(function (f) {
         return '<div class="photo-cell"><img src="' + f.src + '" alt=""/><div class="photo-user">' + f.user + '</div></div>';
       }).join('') + '</div>'
       + '<div style="text-align:center;padding-bottom:12px;"><button style="padding:7px 18px;border-radius:20px;border:1px solid #ddd;background:#fff;font-size:12px;font-weight:600;color:#555;cursor:pointer;" onclick="openFotosPanel(currentCarrito)">Ver todas las fotos</button></div>';
   }
 }
 
-document.getElementById('backBtn').addEventListener('click', function() {
+document.getElementById('backBtn').addEventListener('click', function () {
   document.getElementById('detailPanel').classList.remove('open');
 });
 
-document.getElementById('detailTabs').addEventListener('click', function(e) {
+document.getElementById('detailTabs').addEventListener('click', function (e) {
   var tab = e.target.closest('.tab');
   if (!tab) return;
   var target = tab.dataset.tab;
-  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
-  document.querySelectorAll('.tab-pane').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function (t) { t.classList.remove('active'); });
+  document.querySelectorAll('.tab-pane').forEach(function (p) { p.classList.remove('active'); });
   tab.classList.add('active');
   document.getElementById('pane-' + target).classList.add('active');
 });
