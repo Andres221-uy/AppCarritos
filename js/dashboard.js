@@ -67,7 +67,8 @@ function openDashboard() {
     leafletMarkers[c.id].setPopupContent(popupHtml(c));
     renderCards(getFiltered());
     setTimeout(function () { checkAlertTriggers(c.id, c.estado); }, 100);
-    // TODO: sb.from('carritos').update({ estado: c.estado }).eq('id', c.id)
+    // TODO: 
+    sb.from('carritos').update({ estado: c.estado }).eq('id', c.id)
   });
 
   // Emoji picker
@@ -106,7 +107,6 @@ function openDashboard() {
   });
 
   // Agregar sección de tabs del dueño
-  
   var tabSection = document.createElement('div');
   tabSection.style.cssText = 'border-top:2px solid #e8f5ee;margin-top:8px;';
   tabSection.innerHTML =
@@ -264,7 +264,8 @@ window.saveMenuEdits = function () {
   msg.textContent = 'Menú guardado ✓ (conecta Supabase para persistir)';
   msg.className = 'auth-msg success';
   showToast('Menú actualizado ✓');
-  // TODO: sb.from('menu_items').delete().eq('carrito_id', c.id).then(() => sb.from('menu_items').insert(newMenu))
+  // TODO: 
+  sb.from('menu_items').delete().eq('carrito_id', c.id).then(() => sb.from('menu_items').insert(newMenu))
 };
 window.toggleReplyForm = function (i) {
   var form = document.getElementById('replyform' + i);
@@ -301,7 +302,8 @@ window.publishNovedad = function () {
   document.getElementById('novBadge').value = '';
   document.getElementById('novForm').classList.add('hidden');
   showToast('Novedad publicada ✓');
-  // TODO: sb.from('novedades').insert({ carrito_id: c.id, texto: txt, badge })
+  // TODO: 
+  sb.from('novedades').insert({ carrito_id: c.id, texto: txt, badge })
 };
 
 document.getElementById('backDashboard').addEventListener('click', function () {
