@@ -1,12 +1,12 @@
 // ════════════════════════════════════════════════════════════
 //  DASHBOARD DUEÑO
 // ════════════════════════════════════════════════════════════
-var EMOJIS_DASHBOARD = ['🥩','🥞','🌭','🍕','🥙','🥗','🌮','🥐','🍔','☕'];
+var EMOJIS_DASHBOARD = ['🥩', '🥞', '🌭', '🍕', '🥙', '🥗', '🌮', '🥐', '🍔', '☕'];
 
 function openDashboard() {
-  var c      = currentCarrito || CARRITOS[0];
+  var c = currentCarrito || CARRITOS[0];
   var isOpen = c.estado === 'abierto';
-  var body   = document.getElementById('dashboardBody');
+  var body = document.getElementById('dashboardBody');
 
   body.innerHTML =
     '<div class="dashboard-banner">'
@@ -36,9 +36,9 @@ function openDashboard() {
     + '<div class="edit-section" style="border-top:1px solid #f0f0e8;">'
     + '<div class="edit-section-title">Icono del carrito</div>'
     + '<div class="emoji-picker" id="emojiPicker">'
-    + EMOJIS_DASHBOARD.map(function(em) {
-        return '<button class="emoji-opt' + (em === c.emoji ? ' selected' : '') + '" data-em="' + em + '">' + em + '</button>';
-      }).join('')
+    + EMOJIS_DASHBOARD.map(function (em) {
+      return '<button class="emoji-opt' + (em === c.emoji ? ' selected' : '') + '" data-em="' + em + '">' + em + '</button>';
+    }).join('')
     + '</div></div>'
 
     + '<div class="edit-section" style="border-top:1px solid #f0f0e8;">'
@@ -49,14 +49,14 @@ function openDashboard() {
   // Inyectar strip de plan al inicio
   var planStrip = document.createElement('div');
   planStrip.id = 'planStripDashboard';
-  var plan = PLANES.find(function(p) { return p.id === planActual.id; }) || PLANES[0];
+  var plan = PLANES.find(function (p) { return p.id === planActual.id; }) || PLANES[0];
   planStrip.innerHTML = buildPlanStrip(plan);
   body.insertBefore(planStrip, body.firstChild);
 
   // Toggle estado
-  var toggle      = document.getElementById('statusToggle');
+  var toggle = document.getElementById('statusToggle');
   var statusLabel = document.getElementById('statusLabel');
-  toggle.addEventListener('click', function() {
+  toggle.addEventListener('click', function () {
     var nowOpen = toggle.classList.contains('off');
     toggle.classList.toggle('on', nowOpen);
     toggle.classList.toggle('off', !nowOpen);
@@ -66,35 +66,35 @@ function openDashboard() {
     leafletMarkers[c.id].setIcon(markerIcon(c));
     leafletMarkers[c.id].setPopupContent(popupHtml(c));
     renderCards(getFiltered());
-    setTimeout(function() { checkAlertTriggers(c.id, c.estado); }, 100);
+    setTimeout(function () { checkAlertTriggers(c.id, c.estado); }, 100);
     // TODO: sb.from('carritos').update({ estado: c.estado }).eq('id', c.id)
   });
 
   // Emoji picker
-  document.getElementById('emojiPicker').addEventListener('click', function(e) {
+  document.getElementById('emojiPicker').addEventListener('click', function (e) {
     var btn = e.target.closest('.emoji-opt');
     if (!btn) return;
-    document.querySelectorAll('.emoji-opt').forEach(function(b) { b.classList.remove('selected'); });
+    document.querySelectorAll('.emoji-opt').forEach(function (b) { b.classList.remove('selected'); });
     btn.classList.add('selected');
     document.getElementById('dbEmoji').textContent = btn.dataset.em;
   });
 
   // Guardar info
-  document.getElementById('dbSaveBtn').addEventListener('click', function() {
+  document.getElementById('dbSaveBtn').addEventListener('click', function () {
     var nombre = document.getElementById('dbNombre').value.trim();
     var barrio = document.getElementById('dbBarrio').value.trim();
-    var emoji  = (document.querySelector('.emoji-opt.selected') || {}).dataset || {};
+    var emoji = (document.querySelector('.emoji-opt.selected') || {}).dataset || {};
     if (!nombre || !barrio) {
       var msg = document.getElementById('dbSaveMsg');
       msg.textContent = 'Completá al menos nombre y barrio.';
       msg.className = 'auth-msg error';
       return;
     }
-    c.nombre      = nombre;
-    c.barrio      = barrio;
-    c.especialidad= document.getElementById('dbEspecialidad').value;
-    c.horario     = document.getElementById('dbHorario').value;
-    c.telefono    = document.getElementById('dbTelefono').value;
+    c.nombre = nombre;
+    c.barrio = barrio;
+    c.especialidad = document.getElementById('dbEspecialidad').value;
+    c.horario = document.getElementById('dbHorario').value;
+    c.telefono = document.getElementById('dbTelefono').value;
     if (emoji.em) c.emoji = emoji.em;
     leafletMarkers[c.id].setIcon(markerIcon(c));
     leafletMarkers[c.id].setPopupContent(popupHtml(c));
@@ -102,7 +102,7 @@ function openDashboard() {
     var msg = document.getElementById('dbSaveMsg');
     msg.textContent = '✓ Cambios guardados (conectá Supabase para persistirlos)';
     msg.className = 'auth-msg success';
-    // TODO: sb.from('carritos').update({ nombre, barrio, emoji: c.emoji, ... }).eq('id', c.id)
+    sb.from('carritos').update({ nombre, barrio, emoji: c.emoji}).eq('id', c.id)
   });
 
   // Agregar sección de tabs del dueño
@@ -118,7 +118,7 @@ function openDashboard() {
     + '<div style="padding:14px 16px;" id="dbTabContent"></div>';
   body.appendChild(tabSection);
 
-  document.getElementById('dbTabs').addEventListener('click', function(e) {
+  document.getElementById('dbTabs').addEventListener('click', function (e) {
     var t = e.target.closest('[data-dbtab]');
     if (t) renderDbTab(t.dataset.dbtab, c);
   });
@@ -129,14 +129,14 @@ function openDashboard() {
 
 function renderDbTab(tab, c) {
   var content = document.getElementById('dbTabContent');
-  document.querySelectorAll('[data-dbtab]').forEach(function(t) {
+  document.querySelectorAll('[data-dbtab]').forEach(function (t) {
     t.classList.toggle('active', t.dataset.dbtab === tab);
   });
 
   if (tab === 'stats') {
-    var views    = Math.floor(Math.random() * 800) + 200;
-    var clicks   = Math.floor(Math.random() * 120) + 30;
-    var h        = historial.find(function(x) { return x.id === c.id; });
+    var views = Math.floor(Math.random() * 800) + 200;
+    var clicks = Math.floor(Math.random() * 120) + 30;
+    var h = historial.find(function (x) { return x.id === c.id; });
     var visitCount = h ? h.count : 0;
     content.innerHTML =
       '<div class="stats-grid">'
@@ -149,12 +149,12 @@ function renderDbTab(tab, c) {
       + '<div class="bar-chart" id="dbBarChart"></div>'
       + '<div style="display:flex;gap:4px;" id="dbBarLabels"></div></div>';
 
-    var days = ['L','M','X','J','V','S','D'];
-    var vals = days.map(function() { return Math.floor(Math.random() * 90) + 10; });
+    var days = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
+    var vals = days.map(function () { return Math.floor(Math.random() * 90) + 10; });
     var maxV = Math.max.apply(null, vals);
-    var chart  = document.getElementById('dbBarChart');
+    var chart = document.getElementById('dbBarChart');
     var labels = document.getElementById('dbBarLabels');
-    days.forEach(function(d, i) {
+    days.forEach(function (d, i) {
       var bar = document.createElement('div');
       bar.className = 'bar' + (i === 6 ? ' highlight' : '');
       bar.style.height = Math.round(vals[i] / maxV * 100) + '%';
@@ -169,7 +169,7 @@ function renderDbTab(tab, c) {
 
   } else if (tab === 'menu') {
     content.innerHTML = '<div id="menuEditList">'
-      + c.menu.map(function(m, i) {
+      + c.menu.map(function (m, i) {
         return '<div class="menu-edit-item" id="medit' + i + '">'
           + '<button class="menu-edit-del" onclick="deleteMenuItem(' + i + ')">✕</button>'
           + '<div class="field" style="margin-bottom:8px;"><label>Nombre</label><input id="mnom' + i + '" value="' + m.nombre + '"/></div>'
@@ -184,15 +184,15 @@ function renderDbTab(tab, c) {
 
   } else if (tab === 'responder') {
     content.innerHTML = '<div id="reseñasList">'
-      + c.resenas.map(function(r, i) {
+      + c.resenas.map(function (r, i) {
         var stars = ''; for (var s = 0; s < r.stars; s++) stars += '★';
         var replyHtml = r.respuesta
           ? '<div class="review-reply"><div class="review-reply-label">Respuesta del dueño</div>' + r.respuesta + '</div>'
           : '<button class="reply-btn" onclick="toggleReplyForm(' + i + ')">Responder ›</button>'
-            + '<div class="reply-form" id="replyform' + i + '">'
-            + '<textarea id="replytxt' + i + '" placeholder="Tu respuesta..."></textarea>'
-            + '<button class="reply-submit" onclick="submitReply(' + i + ',currentCarrito)">Publicar</button>'
-            + '</div>';
+          + '<div class="reply-form" id="replyform' + i + '">'
+          + '<textarea id="replytxt' + i + '" placeholder="Tu respuesta..."></textarea>'
+          + '<button class="reply-submit" onclick="submitReply(' + i + ',currentCarrito)">Publicar</button>'
+          + '</div>';
         return '<div class="review" id="rev' + i + '">'
           + '<div class="review-top"><span class="reviewer">' + r.user + '</span><span class="review-date">' + r.fecha + '</span></div>'
           + '<div class="review-stars">' + stars + '</div>'
@@ -201,7 +201,7 @@ function renderDbTab(tab, c) {
       }).join('') + '</div>';
 
   } else if (tab === 'novs') {
-    var myNovs = novedades.filter(function(n) { return n.carritoId === c.id; });
+    var myNovs = novedades.filter(function (n) { return n.carritoId === c.id; });
     content.innerHTML =
       '<div class="novedad-form hidden" id="novForm">'
       + '<div class="field" style="margin-bottom:8px;"><label>Mensaje</label>'
@@ -216,7 +216,7 @@ function renderDbTab(tab, c) {
       + '<div style="margin-top:14px;">'
       + (myNovs.length === 0
         ? '<p style="color:#bbb;font-size:13px;text-align:center;padding:20px 0;">Aún no publicaste novedades.</p>'
-        : myNovs.map(function(n) {
+        : myNovs.map(function (n) {
           return '<div class="novedad-card">'
             + '<div class="novedad-text">' + n.texto + '</div>'
             + (n.badge ? '<div class="novedad-badge">' + n.badge + '</div>' : '')
@@ -228,16 +228,16 @@ function renderDbTab(tab, c) {
 }
 
 // Acciones globales del dashboard
-window.deleteMenuItem = function(i) {
+window.deleteMenuItem = function (i) {
   if (confirm('¿Eliminar este plato?')) {
     var el = document.getElementById('medit' + i);
     if (el) el.remove();
   }
 };
-window.addMenuItem = function() {
+window.addMenuItem = function () {
   var list = document.getElementById('menuEditList');
-  var i    = list.children.length;
-  var div  = document.createElement('div');
+  var i = list.children.length;
+  var div = document.createElement('div');
   div.className = 'menu-edit-item';
   div.id = 'medit' + i;
   div.innerHTML = '<button class="menu-edit-del" onclick="deleteMenuItem(' + i + ')">✕</button>'
@@ -246,12 +246,12 @@ window.addMenuItem = function() {
     + '<div class="field" style="margin-bottom:0;"><label>Precio</label><input id="mprec' + i + '" placeholder="$000"/></div>';
   list.appendChild(div);
 };
-window.saveMenuEdits = function() {
-  var c     = currentCarrito || CARRITOS[0];
+window.saveMenuEdits = function () {
+  var c = currentCarrito || CARRITOS[0];
   var items = document.querySelectorAll('.menu-edit-item');
   var newMenu = [];
-  items.forEach(function(item) {
-    var nom  = item.querySelector('[id^="mnom"]');
+  items.forEach(function (item) {
+    var nom = item.querySelector('[id^="mnom"]');
     var desc = item.querySelector('[id^="mdesc"]');
     var prec = item.querySelector('[id^="mprec"]');
     if (nom && nom.value.trim()) {
@@ -265,18 +265,18 @@ window.saveMenuEdits = function() {
   showToast('Menú actualizado ✓');
   // TODO: sb.from('menu_items').delete().eq('carrito_id', c.id).then(() => sb.from('menu_items').insert(newMenu))
 };
-window.toggleReplyForm = function(i) {
+window.toggleReplyForm = function (i) {
   var form = document.getElementById('replyform' + i);
   if (form) form.classList.toggle('open');
 };
-window.submitReply = function(i, c) {
+window.submitReply = function (i, c) {
   if (!c) return;
   var txt = document.getElementById('replytxt' + i).value.trim();
   if (!txt) { showToast('Escribí tu respuesta primero'); return; }
   c.resenas[i].respuesta = txt;
   var rev = document.getElementById('rev' + i);
   if (rev) {
-    var btn  = rev.querySelector('.reply-btn');
+    var btn = rev.querySelector('.reply-btn');
     var form = rev.querySelector('.reply-form');
     if (btn) btn.remove();
     if (form) form.remove();
@@ -288,9 +288,9 @@ window.submitReply = function(i, c) {
   showToast('Respuesta publicada ✓');
   // TODO: sb.from('review_replies').insert({ review_id: ..., texto: txt })
 };
-window.publishNovedad = function() {
-  var c     = currentCarrito || CARRITOS[0];
-  var txt   = document.getElementById('novTxt').value.trim();
+window.publishNovedad = function () {
+  var c = currentCarrito || CARRITOS[0];
+  var txt = document.getElementById('novTxt').value.trim();
   var badge = document.getElementById('novBadge').value.trim();
   if (!txt) { showToast('Escribí el mensaje primero'); return; }
   var nov = { carritoId: c.id, emoji: c.emoji, nombre: c.nombre, texto: txt, fecha: 'Ahora mismo', badge: badge || null };
@@ -303,7 +303,7 @@ window.publishNovedad = function() {
   // TODO: sb.from('novedades').insert({ carrito_id: c.id, texto: txt, badge })
 };
 
-document.getElementById('backDashboard').addEventListener('click', function() {
+document.getElementById('backDashboard').addEventListener('click', function () {
   document.getElementById('dashboardPanel').classList.remove('open');
 });
 
@@ -314,12 +314,12 @@ function buildPlanStrip(plan) {
     + '<div class="plan-current-icon">' + plan.emoji + '</div>'
     + '<div><div class="plan-current-name">Plan ' + plan.nombre + '</div>'
     + (planActual.vence
-        ? '<div class="plan-current-sub">Vence: ' + planActual.vence + '</div>'
-        : '<div class="plan-current-sub">Plan gratuito</div>')
+      ? '<div class="plan-current-sub">Vence: ' + planActual.vence + '</div>'
+      : '<div class="plan-current-sub">Plan gratuito</div>')
     + '</div></div>'
     + (planActual.id !== 'destacado'
-        ? '<button class="plan-upgrade-btn' + (planActual.id === 'pro' ? ' gold' : '') + '" onclick="openPlanesPanel()">'
-          + (planActual.id === 'gratis' ? '⬆️ Mejorar' : '🏆 Destacado') + '</button>'
-        : '<span style="font-size:11px;color:#c07800;font-weight:700;">Plan máximo ✓</span>')
+      ? '<button class="plan-upgrade-btn' + (planActual.id === 'pro' ? ' gold' : '') + '" onclick="openPlanesPanel()">'
+      + (planActual.id === 'gratis' ? '⬆️ Mejorar' : '🏆 Destacado') + '</button>'
+      : '<span style="font-size:11px;color:#c07800;font-weight:700;">Plan máximo ✓</span>')
     + '</div>';
 }
